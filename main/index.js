@@ -25,7 +25,11 @@ app.post('/api/users', async(req, res) => {
   res.send(result)
 })
 
-// Start the server
+app.get('/api/users', async(req, res) => {
+  const user = await db.find().toAttay()
+  res.send(user)
+})
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
