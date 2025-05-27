@@ -29,6 +29,10 @@ app.get('/api/users', async(req, res) => {
   const user = await db.find().toAttay()
   res.send(user)
 })
+app.get('/api/users/:id', async(req, res) => {
+  const user = await db.find().toAttay()
+  res.send(user)
+})
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
