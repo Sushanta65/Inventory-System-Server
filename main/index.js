@@ -58,6 +58,16 @@ app.get("/api/users/:id", async (req, res) => {
   }
 });
 
+app.delete("/api/users/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await db.deleteOne({ _id: id });
+    res.send(result);
+  } catch (error) {
+    res.status(500).send({ message: "Error fetching user", error });
+  }
+});
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
