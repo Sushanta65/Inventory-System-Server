@@ -47,6 +47,16 @@ app.get("/api/users", async (req, res) => {
   }
 });
 
+// Get a user by ID
+app.get("/api/users/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const user = await db.findOne({ _id: id });
+    res.send(user);
+  } catch (error) {
+    res.status(500).send({ message: "Error fetching user", error });
+  }
+});
 
 // Start the server
 const PORT = process.env.PORT || 5000;
