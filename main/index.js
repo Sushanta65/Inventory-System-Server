@@ -5,7 +5,14 @@ const cors = require("cors");
 // Load environment variables
 dotenv.config();
 
-const db = 'database'
+// Mock database (replace with actual database logic)
+const db = {
+  insertOne: async (user) => ({ insertedId: "123abc", ...user }),
+  find: () => ({
+    toArray: async () => [{ name: "John Doe" }, { name: "Jane Doe" }],
+  }),
+  findOne: async (query) => ({ _id: query._id, name: "John Doe" }),
+};
 
 // Initialize Express app
 const app = express();
@@ -14,27 +21,29 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Routes
-app.get('/', (req, res) => {
-    res.send('Your App is Running Properly.')
-})
-
-app.post('/api/users', async(req, res) => {
-  const user = req.body;
-  const result = await db.insertOne(user)
-  res.send(result)
-})
-
-app.get('/api/users', async(req, res) => {
-  const user = await db.find().toAttay()
-  res.send(user)
-})
-app.get('/api/users/:id', async(req, res) => {
-  const user = await db.find().toAttay()
-  res.send(user)
-})
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// Root route
+app.get("/", (req, res) => {
+  res.send("Your App is Running Properly.");
 });
+
+// Create a new user
+app.post("/api/users", async (req, res) => {
+  try {
+    const user = req.body;
+    const result = await db.insertOne(user);
+    res.send(result);
+  } catch (error) {
+    res.status(500).send({ message: "Error creating user", error });
+  }
+});
+
+// Get all users
+app.get("/api/users", async (req, res) => {
+  try {
+    const users = await db.find().toArray();
+    res.send(users);
+  } catch (error) {
+    res.status(500).send({ message: "Error fetching users", error });
+  }
+});
+
